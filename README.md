@@ -2,6 +2,17 @@
 
 LSP intelligence through a persistent daemon. It can run as an MCP server (Claude Code, Codex, any MCP client) or as a [Pi](https://pi.dev) package.
 
+## One LSP setup, every harness
+
+Coding agents each ship their own LSP story: some have built-in language-server integrations, some rely on shelling out to `tsc`/`eslint`/`prettier`, some have nothing. That means the same edit gets verified differently depending on which harness you happen to be using.
+
+lsp-mcp moves LSP out of the harness and behind MCP. Any MCP-capable agent gets the same `lsp_*` tools backed by the same warm daemon, the same project config (`.lsp-mcp.json`), and the same diagnostics/format/autofix behavior:
+
+- **Switch harnesses freely** — Claude Code, Codex, Pi, opencode, or anything else that speaks MCP: no reconfiguration, no relearning a different LSP integration.
+- **One daemon per project root** — language servers stay warm and are shared across harnesses and sessions, so checks are fast.
+- **Consistent verification flow** — pair it with the [lsp-verification skill](#make-your-agent-verify-with-lsp) so every harness checks edits the same way instead of falling back to CLI tools.
+- **Config lives with the project** — `.lsp-mcp.json` defines servers and formatters once, for every agent that works in the repo.
+
 `bun` and the language server you select (such as `tsgo`, `typescript-language-server`, `vscode-eslint-language-server`, or `gopls`) must be available on `PATH`.
 
 ## Pi
@@ -91,6 +102,24 @@ The file-based tools accept `file` as a single path **or an array of paths**, so
 - `lsp_pull_changes` — diffs for the given files
 
 Passing a single string keeps the original response shape.
+
+## Make your agent verify with LSP
+
+The skill in `skills/lsp-verification/` teaches agents to check edits with lsp-mcp — `lsp_sync_file` → `lsp_diagnostics` → `lsp_autofix` — before falling back to `tsc`, `eslint`, `prettier`, or similar CLI tools, whenever a language server covers the file.
+
+### Claude Code / opencode (`SKILL.md`)
+
+```sh
+# user-level
+mkdir -p ~/.claude/skills && cp -R skills/lsp-verification ~/.claude/skills/
+mkdir -p ~/.config/opencode/skills && cp -R skills/lsp-verification ~/.config/opencode/skills/
+# or project-level
+mkdir -p .claude/skills && cp -R skills/lsp-verification .claude/skills/
+```
+
+### Codex, Pi, and other `AGENTS.md` harnesses
+
+Append `skills/lsp-verification/AGENTS.md` to your project's `AGENTS.md`.
 
 ## Releasing
 

@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "Kaitlyn",
   "keywords": ["pi-package", "mcp", "lsp", "language-server", "diagnostics"],
-  "files": ["bin", "src", "extensions"],
+  "files": ["bin", "src", "extensions", "skills"],
   "pi": {
     "extensions": ["./extensions/lsp-mcp.ts"]
   },
