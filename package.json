@@ -1,0 +1,49 @@
+{
+  "name": "lsp-mcp",
+  "version": "0.1.0",
+  "description": "MCP server and Pi extension providing LSP intelligence via a persistent daemon",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kaitlyn",
+  "keywords": ["pi-package", "mcp", "lsp", "language-server", "diagnostics"],
+  "files": ["bin", "src", "extensions"],
+  "pi": {
+    "extensions": ["./extensions/lsp-mcp.ts"]
+  },
+  "bin": {
+    "lsp-mcp": "./bin/lsp-mcp.ts",
+    "lsp-mcp-daemon": "./bin/lsp-mcp-daemon.ts",
+    "lsp-mcp-cli": "./bin/lsp-mcp-cli.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "bun test && bun run typecheck"
+  },
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "diff": "^9.0.0"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    },
+    "typebox": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/diff": "^8.0.0",
+    "typescript": "^6.0.0"
+  }
+}
